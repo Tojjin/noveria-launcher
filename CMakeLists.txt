@@ -13,13 +13,15 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 qt_standard_project_setup()
 
-set(PROJECT_SOURCES
+qt_add_executable(noveria-launcher
   src/main.cpp
   src/mainwindow.h
   src/mainwindow.cpp
+  src/desktopentry.h
+  src/desktopparser.h
+  src/desktopentry.cpp
+  src/desktopparser.cpp
 )
-
-qt_add_executable(noveria-launcher ${PROJECT_SOURCES})
 
 target_link_libraries(noveria-launcher PRIVATE Qt6::Widgets)
 
