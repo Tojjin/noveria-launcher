@@ -3,8 +3,6 @@
 
 #include "desktopentry.h"
 #include <QList>
-#include <QString>
-#include <QStringList>
 
 class DesktopParser {
 
