@@ -7,6 +7,8 @@
 #include <QModelIndex>
 #include <QVariant>
 #include <QList>
+#include <QHash>
+#include <QIcon>
 
 class DesktopEntryModel : public QAbstractListModel {
 
@@ -24,6 +26,9 @@ public:
 private:
 
     QList<DesktopEntry> m_entries;
+    mutable QHash<QString, QIcon> m_iconCache;
+
+    QIcon loadIcon(const QString& iconName) const;
 };
 
 #endif // DESKTOPENTRYMODEL_H

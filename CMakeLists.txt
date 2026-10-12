@@ -17,12 +17,17 @@ qt_add_executable(noveria-launcher
   src/main.cpp
   src/mainwindow.h
   src/mainwindow.cpp
+
   src/desktopentry.h
-  src/desktopparser.h
   src/desktopentry.cpp
+
+  src/desktopparser.h
   src/desktopparser.cpp
+
   src/desktopentrymodel.h
   src/desktopentrymodel.cpp
+
+  resources/resources.qrc
 )
 
 target_link_libraries(noveria-launcher PRIVATE Qt6::Widgets)

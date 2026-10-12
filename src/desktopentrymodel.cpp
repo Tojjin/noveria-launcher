@@ -23,7 +23,7 @@ QVariant DesktopEntryModel::data(const QModelIndex &index, int role) const {
     case Qt::DisplayRole:
         return entry.name;
     case Qt::DecorationRole:
-        return QIcon();
+        return loadIcon(entry.icon);
     case Qt::ToolTipRole:
         return entry.comment;
     default:
@@ -38,4 +38,31 @@ const DesktopEntry* DesktopEntryModel::at(const QModelIndex &index) const {
     }
 
     return nullptr;
+}
+
+QIcon DesktopEntryModel::loadIcon(const QString &iconName) const {
+
+    if (iconName.isEmpty()) {
+        return QIcon::fromTheme("application-x-executable");
+    }
+
+    if (m_iconCache.contains(iconName)) {
+        return m_iconCache.value(iconName);
+    }
+
+    QIcon icon;
+    if (iconName.startsWith('/')) {
+        icon = QIcon(iconName);
+    }
+    else {
+        icon = QIcon::fromTheme(iconName);
+    }
+
+    if (icon.isNull()) {
+        icon = QIcon::fromTheme("application-x-executable");
+    }
+
+    m_iconCache.insert(iconName, icon);
+
+    return icon;
 }
