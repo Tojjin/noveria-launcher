@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
-    setFixedSize(QSize(540,525));
+    setFixedSize(QSize(540,510));
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
@@ -24,11 +24,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_appsView->setUniformItemSizes(true);
     m_appsView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_appsView->setMouseTracking(true);
-    m_appsView->setContentsMargins(0,0,0,0);
+    m_appsView->setContentsMargins(0, 0, 0, 0);
+    m_appsView->setItemDelegate(new DesktopEntryDelegate(this));
 
     layout->addWidget(m_searchInput);
     layout->addWidget(m_appsView);
-    layout->setContentsMargins(0,0,0,0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     DesktopParser parser;
     QList<DesktopEntry> entries = parser.parseAll();

@@ -3,6 +3,7 @@
 
 #include "desktopentrymodel.h"
 #include "desktopparser.h"
+#include "desktopentrydelegate.h"
 
 #include <QMainWindow>
 #include <QLineEdit>

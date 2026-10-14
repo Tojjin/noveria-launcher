@@ -16,7 +16,6 @@ struct DesktopEntry {
     QStringList categories;
 
     bool isValid() const;
-    bool hasComment() const;
 };
 
 #endif // DESKTOPENTRY_H

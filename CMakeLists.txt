@@ -27,6 +27,9 @@ qt_add_executable(noveria-launcher
   src/desktopentrymodel.h
   src/desktopentrymodel.cpp
 
+  src/desktopentrydelegate.h
+  src/desktopentrydelegate.cpp
+
   resources/resources.qrc
 )
 

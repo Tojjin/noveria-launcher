@@ -22,23 +22,21 @@ QListView {
     color: white;
     border: none;
     border-radius: 5px;
+    font-family: "JetBrainsMono Nerd Font Propo";
     font-size: 14px;
     margin: 5px 10px 0px 10px;
 }
 
 QListView::item {
-    padding: 15px 0px 15px 10px;
-    margin: 0px 10px 5px 0px;
+    margin: 0px 10px 6px 0px;
 }
 
 QListView::item:selected {
-    color: black;
     background-color: rgba(61, 174, 233, 255);
     border-radius: 5px;
 }
 
 QListView::item:hover {
-    color: black;
     background-color: rgba(61, 174, 233, 255);
     border-radius: 5px;
 }
@@ -47,7 +45,7 @@ QScrollBar:vertical {
     background: rgba(255, 255, 255, 10);
     width: 10px;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 QScrollBar::handle:vertical {
