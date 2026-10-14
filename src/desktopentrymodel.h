@@ -10,6 +10,13 @@
 #include <QHash>
 #include <QIcon>
 
+enum Roles {
+    NameRole = Qt::UserRole + 1,
+    CommentRole,
+    ExecRole,
+    IconRole,
+};
+
 class DesktopEntryModel : public QAbstractListModel {
 
     Q_OBJECT

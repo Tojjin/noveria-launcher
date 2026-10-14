@@ -20,12 +20,14 @@ QVariant DesktopEntryModel::data(const QModelIndex &index, int role) const {
 
     switch (role) {
 
-    case Qt::DisplayRole:
+    case NameRole:
         return entry.name;
-    case Qt::DecorationRole:
-        return loadIcon(entry.icon);
-    case Qt::ToolTipRole:
+    case CommentRole:
         return entry.comment;
+    case ExecRole:
+        return entry.exec;
+    case IconRole:
+        return loadIcon(entry.icon);
     default:
         return QVariant();
     }
