@@ -4,6 +4,7 @@
 #include <QKeyEvent>
 #include <QRegularExpression>
 #include <QProcess>
+#include <QMouseEvent>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -22,19 +23,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_appsView = new QListView(this);
 
     m_searchInput->installEventFilter(this);
+    m_appsView->viewport()->installEventFilter(this);
 
     m_searchInput->setPlaceholderText("Search applications...");
     m_searchInput->setFocus();
+    m_searchInput->setMouseTracking(true);
 
     m_appsView->setUniformItemSizes(true);
     m_appsView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_appsView->setMouseTracking(true);
-    m_appsView->setContentsMargins(0, 0, 0, 0);
     m_appsView->setItemDelegate(new DesktopEntryDelegate(this));
 
     layout->addWidget(m_searchInput);
     layout->addWidget(m_appsView);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(10, 10, 10, 0);
+    layout->setSpacing(10);
 
     DesktopParser parser;
     QList<DesktopEntry> entries = parser.parseAll();
@@ -65,6 +68,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 
         QKeyEvent* pressedKey = static_cast<QKeyEvent*>(event);
 
+        if (pressedKey->key() == Qt::Key_Escape) {
+            close();
+            return true;
+        }
         if (pressedKey->key() == Qt::Key_Down) {
 
             int row = m_appsView->currentIndex().row();
@@ -84,6 +91,22 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
             }
 
             return true;
+        }
+    }
+
+    if (watched == m_appsView->viewport()) {
+
+        if (event->type() == QEvent::MouseMove) {
+
+            QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
+            QModelIndex index = m_appsView->indexAt(mouse->pos());
+
+            if (index.isValid()) {
+                m_appsView->viewport()->setCursor(Qt::PointingHandCursor);
+            }
+            else {
+                m_appsView->viewport()->setCursor(Qt::ArrowCursor);
+            }
         }
     }
 
