@@ -12,7 +12,6 @@ QLineEdit {
     border: none;
     border-radius: 5px;
     padding: 10px;
-    margin: 10px 10px 0px 10px;
     font-size: 14px;
 }
 
@@ -24,7 +23,6 @@ QListView {
     border-radius: 5px;
     font-family: "JetBrainsMono Nerd Font Propo";
     font-size: 14px;
-    margin: 5px 10px 0px 10px;
 }
 
 QListView::item {
