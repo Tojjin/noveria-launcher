@@ -54,6 +54,11 @@ void DesktopEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
     QString name = index.data(NameRole).value<QString>();
     QString comment = index.data(CommentRole).value<QString>();
+    QString genericName = index.data(GenericNameRole).value<QString>();
+
+    if (comment.trimmed().isEmpty()) {
+        comment = genericName;
+    }
 
     int totalTextHeight = fmName.height();
     if(!comment.trimmed().isEmpty()) {

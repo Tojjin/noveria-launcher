@@ -22,12 +22,18 @@ QVariant DesktopEntryModel::data(const QModelIndex &index, int role) const {
 
     case NameRole:
         return entry.name;
+    case GenericNameRole:
+        return entry.genericName;
     case CommentRole:
         return entry.comment;
     case ExecRole:
         return entry.exec;
     case IconRole:
         return loadIcon(entry.icon);
+    case CategoriesRole:
+        return entry.categories.join(" ");
+    case KeywordsRole:
+        return entry.keywords.join(" ");
     default:
         return QVariant();
     }

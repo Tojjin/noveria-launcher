@@ -4,6 +4,7 @@
 #include "desktopentrymodel.h"
 #include "desktopparser.h"
 #include "desktopentrydelegate.h"
+#include "desktopentryproxymodel.h"
 
 #include <QMainWindow>
 #include <QLineEdit>
@@ -22,6 +23,7 @@ private:
     QLineEdit* m_searchInput;
     QListView* m_appsView;
     DesktopEntryModel* m_model;
+    DesktopEntryProxyModel* m_proxy;
 };
 
 #endif // MAINWINDOW_H

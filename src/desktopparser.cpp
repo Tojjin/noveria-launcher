@@ -96,6 +96,9 @@ void DesktopParser::parseLine(const QString &line, DesktopEntry &entry) const {
     if (key == "Name") {
         entry.name = value;
     }
+    else if (key == "GenericName") {
+        entry.genericName = value;
+    }
     else if (key == "Comment") {
         entry.comment = value;
     }

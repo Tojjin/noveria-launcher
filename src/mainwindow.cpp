@@ -35,6 +35,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QList<DesktopEntry> entries = parser.parseAll();
 
     m_model = new DesktopEntryModel(entries,this);
-    m_appsView->setModel(m_model);
-    m_appsView->setCurrentIndex(m_model->index(0));
+    m_proxy = new DesktopEntryProxyModel(this);
+    m_proxy->setSourceModel(m_model);
+    m_appsView->setModel(m_proxy);
+
+    connect(m_searchInput, &QLineEdit::textChanged, m_proxy, &DesktopEntryProxyModel::setQuery);
+    connect(m_proxy, &DesktopEntryProxyModel::filterUpdated, this, [this]() {
+        if (m_proxy->rowCount() > 0) {
+            m_appsView->setCurrentIndex(m_proxy->index(0, 0));
+        }
+    });
+
 }

@@ -12,9 +12,12 @@
 
 enum Roles {
     NameRole = Qt::UserRole + 1,
+    GenericNameRole,
     CommentRole,
     ExecRole,
     IconRole,
+    CategoriesRole,
+    KeywordsRole,
 };
 
 class DesktopEntryModel : public QAbstractListModel {
