@@ -24,6 +24,10 @@ private:
     QListView* m_appsView;
     DesktopEntryModel* m_model;
     DesktopEntryProxyModel* m_proxy;
+
+protected:
+
+    bool eventFilter(QObject *watched, QEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

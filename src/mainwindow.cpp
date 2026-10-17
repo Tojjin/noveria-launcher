@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QVBoxLayout>
+#include <QKeyEvent>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -17,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     m_searchInput = new QLineEdit(this);
     m_appsView = new QListView(this);
+
+    m_searchInput->installEventFilter(this);
 
     m_searchInput->setPlaceholderText("Search applications...");
     m_searchInput->setFocus();
@@ -38,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_proxy = new DesktopEntryProxyModel(this);
     m_proxy->setSourceModel(m_model);
     m_appsView->setModel(m_proxy);
+    m_appsView->setCurrentIndex(m_proxy->index(0, 0));
 
     connect(m_searchInput, &QLineEdit::textChanged, m_proxy, &DesktopEntryProxyModel::setQuery);
     connect(m_proxy, &DesktopEntryProxyModel::filterUpdated, this, [this]() {
@@ -46,4 +50,35 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
         }
     });
 
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
+
+    if (watched == m_searchInput && event->type() == QEvent::KeyPress) {
+
+        QKeyEvent* pressedKey = static_cast<QKeyEvent*>(event);
+
+        if (pressedKey->key() == Qt::Key_Down) {
+
+            int row = m_appsView->currentIndex().row();
+
+            if (row + 1 < m_proxy->rowCount()) {
+                m_appsView->setCurrentIndex(m_proxy->index(row + 1, 0));
+            }
+
+            return true;
+        }
+        if (pressedKey->key() == Qt::Key_Up) {
+
+            int row = m_appsView->currentIndex().row();
+
+            if (row > 0) {
+                m_appsView->setCurrentIndex(m_proxy->index(row - 1, 0));
+            }
+
+            return true;
+        }
+    }
+
+    return QMainWindow::eventFilter(watched, event);
 }
