@@ -20,6 +20,8 @@ public:
 
 private:
 
+    void launchApplication(const QModelIndex& index);
+
     QLineEdit* m_searchInput;
     QListView* m_appsView;
     DesktopEntryModel* m_model;

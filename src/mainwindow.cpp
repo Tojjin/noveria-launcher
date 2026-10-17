@@ -2,6 +2,8 @@
 
 #include <QVBoxLayout>
 #include <QKeyEvent>
+#include <QRegularExpression>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -44,12 +46,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_appsView->setCurrentIndex(m_proxy->index(0, 0));
 
     connect(m_searchInput, &QLineEdit::textChanged, m_proxy, &DesktopEntryProxyModel::setQuery);
+
     connect(m_proxy, &DesktopEntryProxyModel::filterUpdated, this, [this]() {
         if (m_proxy->rowCount() > 0) {
             m_appsView->setCurrentIndex(m_proxy->index(0, 0));
         }
     });
 
+    connect(m_appsView, &QListView::clicked, this, &MainWindow::launchApplication);
+    connect(m_searchInput, &QLineEdit::returnPressed, this, [this]() {
+        launchApplication(m_appsView->currentIndex());
+    });
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
@@ -81,4 +88,32 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
     }
 
     return QMainWindow::eventFilter(watched, event);
+}
+
+void MainWindow::launchApplication(const QModelIndex &index) {
+
+    if (!index.isValid()) {
+        return;
+    }
+
+    QString exec = index.data(ExecRole).value<QString>();
+    static const QRegularExpression placeholderRegex("%[fFuUick]");
+    exec.remove(placeholderRegex);
+    exec = exec.trimmed();
+
+    if (exec.isEmpty()) {
+        return;
+    }
+
+    QStringList parts = QProcess::splitCommand(exec);
+
+    if(parts.isEmpty()) {
+        return;
+    }
+
+    QString app = parts.takeFirst();
+    QStringList args = parts;
+
+    QProcess::startDetached(app, args);
+    close();
 }
