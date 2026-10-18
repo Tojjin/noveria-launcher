@@ -25,8 +25,14 @@ QListView {
     font-size: 14px;
 }
 
+QLabel#emptyLabel {
+    color: rgba(255, 255, 255, 100);
+    font-family: "JetBrainsMono Nerd Font Propo";
+    font-size: 14px;
+}
+
 QListView::item {
-    margin: 0px 10px 6px 0px;
+    margin: 0px 0px 6px 0px;
 }
 
 QListView::item:selected {
@@ -41,8 +47,9 @@ QListView::item:hover {
 
 QScrollBar:vertical {
     background: rgba(255, 255, 255, 10);
-    width: 10px;
-    border-radius: 5px;
+    width: 15px;
+    border-left: 3px solid transparent;
+    border-radius: 6px;
     margin-bottom: 5px;
 }
 
