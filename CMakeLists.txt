@@ -42,3 +42,9 @@ set_target_properties(noveria-launcher PROPERTIES
     WIN32_EXECUTABLE OFF
     MACOSX_BUNDLE OFF
 )
+
+include(GNUInstallDirs)
+
+install(TARGETS noveria-launcher
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
