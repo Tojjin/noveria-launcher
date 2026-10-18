@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_model = new DesktopEntryModel(entries,this);
     m_proxy = new DesktopEntryProxyModel(this);
     m_proxy->setSourceModel(m_model);
+    m_proxy->sort(0, Qt::AscendingOrder);
     m_appsView->setModel(m_proxy);
     m_appsView->setCurrentIndex(m_proxy->index(0, 0));
 

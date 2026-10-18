@@ -17,13 +17,11 @@ DesktopEntryDelegate::DesktopEntryDelegate(QObject *parent) : QStyledItemDelegat
 
 void DesktopEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
 
-    //Drawing base ListView boxes
     QStyledItemDelegate::paint(painter, option, index);
 
     // painter->setPen(Qt::red);
     // painter->drawRect(option.rect);
 
-    //Setting up box for Icon
     QIcon icon = index.data(IconRole).value<QIcon>();
     const qreal dpr = painter->device()->devicePixelRatioF();
     QPixmap iconMap = icon.pixmap(QSize(ICON_SIZE, ICON_SIZE),dpr);
@@ -36,11 +34,7 @@ void DesktopEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     // painter->setPen(Qt::green);
     // painter->drawRect(iconLeft, iconTop, ICON_SIZE, ICON_SIZE);
 
-    //Drawing Icon
-
     painter->drawPixmap(iconLeft, iconTop, ICON_SIZE, ICON_SIZE, iconMap);
-
-    //Setting up fonts
 
     QFont nameFont = painter->font();
     nameFont.setPointSize(10);
@@ -49,8 +43,6 @@ void DesktopEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     QFont commentFont = painter->font();
     commentFont.setPointSize(9);
     QFontMetrics fmComment(commentFont);
-
-    //Setting up data
 
     QString name = index.data(NameRole).value<QString>();
     QString comment = index.data(CommentRole).value<QString>();
@@ -65,8 +57,6 @@ void DesktopEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
         totalTextHeight += fmComment.height();
     }
 
-    //Setting up box for Name
-
     int textLeft = option.rect.left() + PADDING + ICON_SIZE + PADDING;
     int textWidth = option.rect.width() - ICON_SIZE - 5*PADDING;
     name = fmName.elidedText(name, Qt::ElideRight, textWidth);
@@ -76,8 +66,6 @@ void DesktopEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
     // painter->setPen(Qt::green);
     // painter->drawRect(nameRect);
-
-    //Setting up box for Comment
 
     comment = fmComment.elidedText(comment, Qt::ElideRight, textWidth);
 
@@ -93,8 +81,6 @@ void DesktopEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     else {
         penColor = NAME_COLOR;
     }
-
-    //Drawing Text
 
     if (!comment.trimmed().isEmpty()) {
         painter->setPen(penColor);

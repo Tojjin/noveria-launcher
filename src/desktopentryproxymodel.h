@@ -16,7 +16,12 @@ public:
 private:
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
+
+    int fuzzySearch(const QString& query, const QString& target) const;
     QString m_query;
+    int getMaxScore(const QModelIndex& index) const;
+
 
 signals:
 
