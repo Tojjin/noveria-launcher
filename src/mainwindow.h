@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QLineEdit>
 #include <QListView>
+#include <QLabel>
 
 class MainWindow : public QMainWindow {
 
@@ -24,12 +25,14 @@ private:
 
     QLineEdit* m_searchInput;
     QListView* m_appsView;
+    QLabel* m_emptyLabel;
     DesktopEntryModel* m_model;
     DesktopEntryProxyModel* m_proxy;
 
 protected:
 
     bool eventFilter(QObject *watched, QEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

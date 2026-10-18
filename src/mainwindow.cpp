@@ -5,6 +5,7 @@
 #include <QRegularExpression>
 #include <QProcess>
 #include <QMouseEvent>
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     m_searchInput = new QLineEdit(this);
     m_appsView = new QListView(this);
+    m_emptyLabel = new QLabel("Nothing found", this);
 
     m_searchInput->installEventFilter(this);
     m_appsView->viewport()->installEventFilter(this);
@@ -33,9 +35,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_appsView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_appsView->setMouseTracking(true);
     m_appsView->setItemDelegate(new DesktopEntryDelegate(this));
+    m_appsView->setFocusPolicy(Qt::NoFocus);
+    m_appsView->verticalScrollBar()->setFocusPolicy(Qt::NoFocus);
+    m_appsView->viewport()->setFocusPolicy(Qt::NoFocus);
+
+    m_emptyLabel->setObjectName("emptyLabel");
+    m_emptyLabel->setAlignment(Qt::AlignLeft);
+    m_emptyLabel->hide();
 
     layout->addWidget(m_searchInput);
     layout->addWidget(m_appsView);
+    layout->addWidget(m_emptyLabel);
     layout->setContentsMargins(10, 10, 10, 0);
     layout->setSpacing(10);
 
@@ -53,7 +63,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     connect(m_proxy, &DesktopEntryProxyModel::filterUpdated, this, [this]() {
         if (m_proxy->rowCount() > 0) {
+            m_appsView->show();
+            m_emptyLabel->hide();
             m_appsView->setCurrentIndex(m_proxy->index(0, 0));
+        }
+        else {
+            m_appsView->hide();
+            m_emptyLabel->show();
         }
     });
 
@@ -69,10 +85,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 
         QKeyEvent* pressedKey = static_cast<QKeyEvent*>(event);
 
-        if (pressedKey->key() == Qt::Key_Escape) {
-            close();
-            return true;
-        }
         if (pressedKey->key() == Qt::Key_Down) {
 
             int row = m_appsView->currentIndex().row();
@@ -140,4 +152,13 @@ void MainWindow::launchApplication(const QModelIndex &index) {
 
     QProcess::startDetached(app, args);
     close();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Escape) {
+        close();
+        return;
+    }
+
+    QMainWindow::keyPressEvent(event);
 }
