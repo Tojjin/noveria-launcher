@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "desktopentrymodel.h"
-#include "desktopparser.h"
+#include "core/desktopentrymodel.h"
+#include "core/desktopparser.h"
 #include "desktopentrydelegate.h"
-#include "desktopentryproxymodel.h"
+#include "core/desktopentryproxymodel.h"
 
 #include <QMainWindow>
 #include <QLineEdit>

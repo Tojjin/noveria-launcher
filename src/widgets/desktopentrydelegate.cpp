@@ -1,5 +1,5 @@
 #include "desktopentrydelegate.h"
-#include "desktopentrymodel.h"
+#include "core/desktopentrymodel.h"
 
 #include <QFontMetrics>
 #include <QIcon>

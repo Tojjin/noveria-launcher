@@ -14,29 +14,30 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets Network Quick QuickControls2)
 qt_standard_project_setup()
 
 qt_add_executable(noveria-launcher
-  src/main.cpp
-  src/mainwindow.h
-  src/mainwindow.cpp
+  src/widgets/main.cpp
+  src/widgets/mainwindow.h
+  src/widgets/mainwindow.cpp
 
-  src/desktopentry.h
-  src/desktopentry.cpp
+  src/core/desktopentry.h
+  src/core/desktopentry.cpp
 
-  src/desktopparser.h
-  src/desktopparser.cpp
+  src/core/desktopparser.h
+  src/core/desktopparser.cpp
 
-  src/desktopentrymodel.h
-  src/desktopentrymodel.cpp
+  src/core/desktopentrymodel.h
+  src/core/desktopentrymodel.cpp
 
-  src/desktopentrydelegate.h
-  src/desktopentrydelegate.cpp
+  src/widgets/desktopentrydelegate.h
+  src/widgets/desktopentrydelegate.cpp
 
-  src/desktopentryproxymodel.h
-  src/desktopentryproxymodel.cpp
+  src/core/desktopentryproxymodel.h
+  src/core/desktopentryproxymodel.cpp
 
   resources/resources.qrc
 )
 
 target_link_libraries(noveria-launcher PRIVATE Qt6::Widgets Qt6::Network)
+target_include_directories(noveria-launcher PRIVATE src)
 
 qt_add_executable(noveria-launcher-qml
   src/main-qml.cpp
@@ -52,6 +53,7 @@ qt_add_qml_module(noveria-launcher-qml
 )
 
 target_link_libraries(noveria-launcher-qml PRIVATE Qt6::Quick Qt6::QuickControls2)
+target_include_directories(noveria-launcher-qml PRIVATE src)
 
 set_target_properties(noveria-launcher PROPERTIES
     WIN32_EXECUTABLE OFF
