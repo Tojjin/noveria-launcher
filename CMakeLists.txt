@@ -44,12 +44,14 @@ qt_add_executable(noveria-launcher-qml
 )
 
 set_source_files_properties(qml/Main.qml PROPERTIES QT_RESOURCE_ALIAS Main.qml)
+set_source_files_properties(qml/Theme.qml PROPERTIES QT_RESOURCE_ALIAS Theme.qml QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(noveria-launcher-qml
   URI Noveria
   VERSION 1.0
   QML_FILES
   qml/Main.qml
+  qml/Theme.qml
 )
 
 target_link_libraries(noveria-launcher-qml PRIVATE Qt6::Quick Qt6::QuickControls2)
