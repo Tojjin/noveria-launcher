@@ -26,6 +26,7 @@ Window {
             spacing: Theme.spacing
 
             TextField {
+                id: searchField
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
                 placeholderText: "Search applications..."
@@ -43,6 +44,7 @@ Window {
                     border.width: 2
                     radius: Theme.radius
                 }
+                onTextChanged: Launcher.query = text
             }
 
             ListView {
@@ -52,6 +54,7 @@ Window {
                 clip: true
                 spacing: 5
                 model: Launcher.model
+                visible: Launcher.resultCount > 0
 
                 delegate: Item {
                     id: delegateItem
@@ -60,9 +63,10 @@ Window {
                     width: ListView.view.width
                     height: 60
 
+
                     Text {
                         anchors.fill: parent
-                        anchors.leftMargin: 5
+                        anchors.leftMargin: 10
                         verticalAlignment: Text.AlignVCenter
                         text: delegateItem.name
                         color: Theme.text
@@ -72,6 +76,20 @@ Window {
                         }
                         elide: Text.ElideRight
                     }
+                }
+            }
+
+            Text {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: Launcher.resultCount === 0
+                text: "Nothing found"
+                color: Theme.textMuted
+                verticalAlignment: Text.AlignTop
+                topPadding: 5
+                font {
+                    family: Theme.fontFamily
+                    pixelSize: Theme.searchFontSize
                 }
             }
         }

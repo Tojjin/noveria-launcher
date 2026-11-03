@@ -1,6 +1,7 @@
 #ifndef LAUNCHER_H
 #define LAUNCHER_H
 
+#include <QString>
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 #include <QAbstractItemModel>
@@ -16,13 +17,26 @@ class Launcher : public QObject {
     QML_SINGLETON
 
     Q_PROPERTY(QAbstractItemModel* model READ model CONSTANT)
+    Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
+    Q_PROPERTY(int resultCount READ resultCount NOTIFY resultCountChanged)
 
 public:
 
     explicit Launcher(QObject* parent = nullptr);
     QAbstractItemModel* model() const;
 
+    QString query() const;
+    void setQuery(const QString& query);
+    int resultCount() const;
+
+signals:
+
+    void queryChanged();
+    void resultCountChanged();
+
 private:
+
+    QString m_query;
 
     DesktopEntryModel* m_model;
     DesktopEntryProxyModel* m_proxy;
