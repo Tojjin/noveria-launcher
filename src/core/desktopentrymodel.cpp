@@ -7,6 +7,10 @@ DesktopEntryModel::DesktopEntryModel(const QList<DesktopEntry> &entries, QObject
 
 int DesktopEntryModel::rowCount(const QModelIndex &parent) const {
 
+    if (parent.isValid()) {
+        return 0;
+    }
+
     return m_entries.size();
 }
 
@@ -73,4 +77,17 @@ QIcon DesktopEntryModel::loadIcon(const QString &iconName) const {
     m_iconCache.insert(iconName, icon);
 
     return icon;
+}
+
+QHash<int, QByteArray> DesktopEntryModel::roleNames() const {
+
+    return {
+        {NameRole, "name"},
+        {GenericNameRole, "genericName"},
+        {CommentRole, "comment"},
+        {ExecRole, "exec"},
+        {IconRole, "icon"},
+        {CategoriesRole, "categories"},
+        {KeywordsRole, "keywords"},
+    };
 }

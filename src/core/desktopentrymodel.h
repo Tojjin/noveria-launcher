@@ -39,6 +39,10 @@ private:
     mutable QHash<QString, QIcon> m_iconCache;
 
     QIcon loadIcon(const QString& iconName) const;
+
+protected:
+
+    QHash<int, QByteArray> roleNames() const override;
 };
 
 #endif // DESKTOPENTRYMODEL_H

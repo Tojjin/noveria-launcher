@@ -35,18 +35,44 @@ Window {
                 placeholderTextColor: Theme.textMuted
                 font {
                     family: Theme.fontFamily
-                    pixelSize: Theme.fontSize
+                    pixelSize: Theme.searchFontSize
                 }
                 background: Rectangle {
-                    color: Theme.fieldBackgound
+                    color: Theme.fieldBackground
                     border.color: Theme.fieldBorder
                     border.width: 2
                     radius: Theme.radius
                 }
             }
 
-            Item {
+            ListView {
+                id: appsList
+                Layout.fillWidth: true
                 Layout.fillHeight: true
+                clip: true
+                spacing: 5
+                model: Launcher.model
+
+                delegate: Item {
+                    id: delegateItem
+                    required property string name
+
+                    width: ListView.view.width
+                    height: 60
+
+                    Text {
+                        anchors.fill: parent
+                        anchors.leftMargin: 5
+                        verticalAlignment: Text.AlignVCenter
+                        text: delegateItem.name
+                        color: Theme.text
+                        font {
+                            family: Theme.fontFamily
+                            pixelSize: Theme.appsNameFontSize
+                        }
+                        elide: Text.ElideRight
+                    }
+                }
             }
         }
     }
