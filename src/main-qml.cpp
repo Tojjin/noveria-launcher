@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QIcon>
 
+#include "app/iconprovider.h"
+
 int main(int argc, char *argv[]) {
 
     QGuiApplication app(argc,argv);
@@ -14,6 +16,7 @@ int main(int argc, char *argv[]) {
     QIcon::setThemeName("Adwaita");
 
     QQmlApplicationEngine engine;
+    engine.addImageProvider("icons", new IconProvider);
 
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
 

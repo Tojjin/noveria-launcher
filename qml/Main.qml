@@ -59,15 +59,28 @@ Window {
                 delegate: Item {
                     id: delegateItem
                     required property string name
+                    required property string iconName
 
                     width: ListView.view.width
-                    height: 60
+                    height: 50
 
+                    Image {
+                        id: appIcon
+                        anchors.left: parent.left
+                        anchors.leftMargin: Theme.spacing
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 32
+                        height: 32
+                        sourceSize: Qt.size(32, 32)
+                        fillMode: Image.PreserveAspectFit
+                        source: "image://icons/" + delegateItem.iconName
+                    }
 
                     Text {
-                        anchors.fill: parent
-                        anchors.leftMargin: 10
-                        verticalAlignment: Text.AlignVCenter
+                        anchors.left: appIcon.right
+                        anchors.leftMargin: Theme.spacing
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
                         text: delegateItem.name
                         color: Theme.text
                         font {

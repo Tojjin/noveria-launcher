@@ -18,6 +18,7 @@ enum Roles {
     IconRole,
     CategoriesRole,
     KeywordsRole,
+    IconNameRole,
 };
 
 class DesktopEntryModel : public QAbstractListModel {

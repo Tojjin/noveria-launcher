@@ -60,8 +60,11 @@ qt_add_qml_module(noveria-launcher-qml
   QML_FILES
   qml/Main.qml
   qml/Theme.qml
-  SOURCES src/app/launcher.h
-  SOURCES src/app/launcher.cpp
+  SOURCES
+    src/app/launcher.h
+    src/app/launcher.cpp
+    src/app/iconprovider.h
+    src/app/iconprovider.cpp
 )
 
 target_link_libraries(noveria-launcher-qml PRIVATE Qt6::Quick Qt6::QuickControls2)

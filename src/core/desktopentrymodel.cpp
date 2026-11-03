@@ -38,6 +38,8 @@ QVariant DesktopEntryModel::data(const QModelIndex &index, int role) const {
         return entry.categories.join(" ");
     case KeywordsRole:
         return entry.keywords.join(" ");
+    case IconNameRole:
+        return entry.icon;
     default:
         return QVariant();
     }
@@ -86,7 +88,7 @@ QHash<int, QByteArray> DesktopEntryModel::roleNames() const {
         {GenericNameRole, "genericName"},
         {CommentRole, "comment"},
         {ExecRole, "exec"},
-        {IconRole, "icon"},
+        {IconNameRole, "iconName"},
         {CategoriesRole, "categories"},
         {KeywordsRole, "keywords"},
     };

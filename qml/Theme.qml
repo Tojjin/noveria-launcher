@@ -13,8 +13,8 @@ QtObject {
     readonly property int radius: 5
     readonly property int spacing: 10
     readonly property int searchFontSize: 14
-    readonly property int appsNameFontSize: 14
-    readonly property int appsCommentFontSize: 10
+    readonly property int appsNameFontSize: 12
+    readonly property int appsCommentFontSize: 11
 
     readonly property string fontFamily: "JetBrainsMono Nerd Font Propo"
 }
