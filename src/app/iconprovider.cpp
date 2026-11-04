@@ -6,7 +6,7 @@ IconProvider::IconProvider() : QQuickImageProvider(QQuickAsyncImageProvider::Pix
 
 QPixmap IconProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
 
-    const int edge = (!requestedSize.isEmpty()) ? qMin(requestedSize.width(), requestedSize.height()) : 40;
+    const int edge = (!requestedSize.isEmpty()) ? qMin(requestedSize.width(), requestedSize.height()) : 32;
 
     if (size) {
         *size = QSize(edge, edge);

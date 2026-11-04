@@ -16,6 +16,16 @@ Window {
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
     color: "transparent"
 
+    MouseArea {
+        id: dragCursorOverlay
+        anchors.fill: parent
+        z: 9999
+        visible: scrollbar.pressed
+        hoverEnabled: true
+        acceptedButtons: Qt.NoButton
+        cursorShape: Qt.PointingHandCursor
+    }
+
     Rectangle {
         anchors.fill: parent
         color: Theme.background
@@ -56,38 +66,107 @@ Window {
                 model: Launcher.model
                 visible: Launcher.resultCount > 0
 
+                boundsBehavior: Flickable.StopAtBounds
+
+                ScrollBar.vertical: ScrollBar {
+                    id: scrollbar
+                    policy: ScrollBar.AsNeeded
+                    visible: scrollbar.size < 1.0
+                    width: Theme.scrollBarWidth
+                    padding: 0
+                    minimumSize: 0.08
+
+                    contentItem: Rectangle {
+                        width: parent.width
+                        radius: Theme.scrollBarWidth / 2
+                        color: Theme.scrollBar
+
+                        HoverHandler {
+                            cursorShape: Qt.PointingHandCursor
+                        }
+                    }
+
+                    background: Rectangle {
+                        width: parent.width
+                        height: parent.height
+                        radius: Theme.scrollBarWidth / 2
+                        color: Theme.fieldBackground
+                    }
+                }
+
                 delegate: Item {
                     id: delegateItem
                     required property string name
+                    required property string comment
+                    required property string genericName
                     required property string iconName
 
-                    width: ListView.view.width
+                    readonly property string commentText: {
+                        const t_comment = delegateItem.comment.trim();
+                        return t_comment !== "" ? t_comment : delegateItem.genericName.trim()
+                    }
+
+                    width: scrollbar.visible ? ListView.view.width - Theme.scrollBarWidth - 5 : ListView.view.width
                     height: 50
+
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: Theme.radius
+                        color: itemHover.hovered ? Theme.accent : "transparent"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                        }
+                    }
+
+                    HoverHandler {
+                        id: itemHover
+                    }
 
                     Image {
                         id: appIcon
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacing
                         anchors.verticalCenter: parent.verticalCenter
-                        width: 32
-                        height: 32
-                        sourceSize: Qt.size(32, 32)
+                        width: Theme.iconSize
+                        height: Theme.iconSize
+                        sourceSize: Qt.size(Theme.iconSourceSize, Theme.iconSourceSize)
                         fillMode: Image.PreserveAspectFit
                         source: "image://icons/" + delegateItem.iconName
                     }
 
-                    Text {
+                    Column {
                         anchors.left: appIcon.right
                         anchors.leftMargin: Theme.spacing
                         anchors.right: parent.right
+                        anchors.rightMargin: Theme.spacing
                         anchors.verticalCenter: parent.verticalCenter
-                        text: delegateItem.name
-                        color: Theme.text
-                        font {
-                            family: Theme.fontFamily
-                            pixelSize: Theme.appsNameFontSize
+
+                        Text {
+                            id: nameText
+                            width: parent.width
+                            text: delegateItem.name
+                            color: itemHover.hovered ? Theme.textSelected : Theme.text
+                            font {
+                                family: Theme.fontFamily
+                                pixelSize: Theme.appsNameFontSize
+                            }
+                            elide: Text.ElideRight
                         }
-                        elide: Text.ElideRight
+
+                        Text {
+                            id: commentText
+                            width: parent.width
+                            text: delegateItem.commentText
+                            visible: text.length > 0
+                            color: Theme.textMuted
+                            font {
+                                family: Theme.fontFamily
+                                pixelSize: Theme.appsCommentFontSize
+                            }
+                            elide: Text.ElideRight
+                        }
                     }
                 }
             }
