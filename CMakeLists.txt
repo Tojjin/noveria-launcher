@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Quick QuickControls2)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickControls2)
 
 qt_standard_project_setup()
 
@@ -58,8 +58,8 @@ qt_add_qml_module(noveria-launcher-qml
   URI Noveria
   VERSION 1.0
   QML_FILES
-  qml/Main.qml
-  qml/Theme.qml
+    qml/Main.qml
+    qml/Theme.qml
   SOURCES
     src/app/launcher.h
     src/app/launcher.cpp

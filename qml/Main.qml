@@ -67,6 +67,7 @@ Window {
                 visible: Launcher.resultCount > 0
 
                 boundsBehavior: Flickable.StopAtBounds
+                acceptedButtons: Qt.NoButton
 
                 ScrollBar.vertical: ScrollBar {
                     id: scrollbar
