@@ -3,15 +3,15 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Noveria
 
-//Root window of the launcher
+//Root window of the launcher.
 Window {
     id: root
-    width: 540
-    height: 510
-    minimumWidth: 540
-    minimumHeight: 510
-    maximumWidth: 540
-    maximumHeight: 510
+    width: Theme.launcherWidth
+    height: Theme.launcherHeight
+    minimumWidth: Theme.launcherWidth
+    minimumHeight: Theme.launcherHeight
+    maximumWidth: Theme.launcherWidth
+    maximumHeight: Theme.launcherHeight
 
     visible: true
     title: "Noveria Launcher"
@@ -40,8 +40,8 @@ Window {
         }
     }
 
-    //Crutch to make it so the mouse cursor always stays as a pointing finger
-    //after grabbing scrollbar thumb even if it move over other elements of the UI
+    //Crutch to make it so the mouse cursor always stays as a pointing finger.
+    //Even after mouse cursor moves over other elements of the UI.
     MouseArea {
         id: dragCursorOverlay
         anchors.fill: parent
@@ -52,7 +52,7 @@ Window {
         cursorShape: Qt.PointingHandCursor
     }
 
-    //Launcher background
+    //Launcher background.
     Rectangle {
         anchors.fill: parent
         color: Theme.background
@@ -62,7 +62,7 @@ Window {
             anchors.margins: Theme.spacing
             spacing: Theme.spacing
 
-            //Search field
+            //Search field.
             TextField {
                 id: searchField
                 Layout.fillWidth: true
@@ -107,163 +107,169 @@ Window {
                 }
             }
 
-            //List that shows all desktop applications
-            ListView {
-                id: appsList
+            //Single ColumnLayout Item for the ListView, ScrollBar and Empty state.
+            //Keeps the ScrollBar from adding extra spacing at the bottom.
+            //Without it ColumnLayout would be TextField -> ListView -> ScrollBar.
+            //Even though ScrollBar is anchored to the right side of the ListView.
+            Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                clip: true
-                spacing: 5
-                model: Launcher.model
-                visible: Launcher.resultCount > 0
 
-                ScrollBar.vertical: scrollbar
+                //List that shows all desktop applications.
+                ListView {
+                    id: appsList
+                    anchors.fill: parent
+                    clip: true
+                    spacing: 5
+                    model: Launcher.model
+                    visible: Launcher.resultCount > 0
 
-                boundsBehavior: Flickable.StopAtBounds
-                acceptedButtons: Qt.NoButton
+                    ScrollBar.vertical: scrollbar
 
-                currentIndex: 0
+                    boundsBehavior: Flickable.StopAtBounds
+                    acceptedButtons: Qt.NoButton
 
-                //Custom delegate to properly draw the item with the icon, name and comment/generic name
-                delegate: Item {
-                    id: delegateItem
-                    required property string name
-                    required property string comment
-                    required property string genericName
-                    required property string iconName
-                    required property int index
+                    currentIndex: 0
 
-                    readonly property bool current: ListView.isCurrentItem
+                    //Custom delegate to properly draw the Item with the Icon, Name and Comment/Generic name.
+                    delegate: Item {
+                        id: delegateItem
+                        required property string name
+                        required property string comment
+                        required property string genericName
+                        required property string iconName
+                        required property int index
 
-                    readonly property string commentText: {
-                        const t_comment = delegateItem.comment.trim();
-                        return t_comment !== "" ? t_comment : delegateItem.genericName.trim()
-                    }
+                        readonly property bool current: ListView.isCurrentItem
 
-                    width: scrollbar.visible ? ListView.view.width - Theme.scrollBarWidth - 2 : ListView.view.width
-                    height: 50
+                        readonly property string commentText: {
+                            const t_comment = delegateItem.comment.trim();
+                            return t_comment !== "" ? t_comment : delegateItem.genericName.trim()
+                        }
 
-                    HoverHandler {
-                        id: itemHover
-                    }
+                        width: scrollbar.visible ? ListView.view.width - Theme.scrollBarWidth - 2 : ListView.view.width
+                        height: 50
 
-                    //List view item background
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: Theme.radius
-                        color: (itemHover.hovered || delegateItem.current) ? Theme.accent : "transparent"
+                        HoverHandler {
+                            id: itemHover
+                        }
 
-                        MouseArea {
+                        //ListView Item background.
+                        Rectangle {
                             anchors.fill: parent
+                            radius: Theme.radius
+                            color: (itemHover.hovered || delegateItem.current) ? Theme.accent : "transparent"
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+
+                                onClicked: {
+                                    appsList.currentIndex = delegateItem.index
+                                    root.launchCurrent()
+                                }
+                            }
+                        }
+
+                        //ListView Item's icon.
+                        Image {
+                            id: appIcon
+                            anchors.left: parent.left
+                            anchors.leftMargin: Theme.spacing
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: Theme.iconSize
+                            height: Theme.iconSize
+                            sourceSize: Qt.size(Theme.iconSourceSize, Theme.iconSourceSize)
+                            fillMode: Image.PreserveAspectFit
+                            source: "image://icons/" + delegateItem.iconName
+                        }
+
+                        //Column for the Name/Comment text.
+                        Column {
+                            anchors.left: appIcon.right
+                            anchors.leftMargin: Theme.spacing
+                            anchors.right: parent.right
+                            anchors.rightMargin: Theme.spacing
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            //Name of the application.
+                            Text {
+                                id: nameText
+                                width: parent.width
+                                text: delegateItem.name
+                                color: (itemHover.hovered || delegateItem.current) ? Theme.textSelected : Theme.text
+                                font {
+                                    family: Theme.fontFamily
+                                    pixelSize: Theme.appsNameFontSize
+                                }
+                                elide: Text.ElideRight
+                            }
+
+                            //Comment of the application.
+                            Text {
+                                id: commentText
+                                width: parent.width
+                                text: delegateItem.commentText
+                                visible: text.length > 0
+                                color: Theme.textMuted
+                                font {
+                                    family: Theme.fontFamily
+                                    pixelSize: Theme.appsCommentFontSize
+                                }
+                                elide: Text.ElideRight
+                            }
+                        }
+                    }
+                }
+
+                //Empty state behavior text box.
+                Text {
+                    anchors.fill: parent
+                    visible: Launcher.resultCount === 0
+                    text: "Nothing found"
+                    color: Theme.textMuted
+                    verticalAlignment: Text.AlignTop
+                    font {
+                        family: Theme.fontFamily
+                        pixelSize: Theme.searchFontSize
+                    }
+                }
+
+                //Scrollbar for the List of applications.
+                ScrollBar {
+                    id: scrollbar
+                    anchors.top: appsList.top
+                    anchors.bottom: appsList.bottom
+                    anchors.right: appsList.right
+                    policy: ScrollBar.AsNeeded
+                    visible: scrollbar.size < 1.0
+                    width: (scrollbar.hovered || scrollbar.pressed) ? Theme.scrollBarWidth : Theme.scrollBarStaticWidth
+                    padding: 0
+                    minimumSize: 0.08
+
+                    //Animation for smooth width change.
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 100
+                            easing.type: Easing.InOutQuad
+                        }
+                    }
+
+                    //Scrollbar thumb.
+                    contentItem: Rectangle {
+                        radius: Theme.scrollBarWidth / 2
+                        color: Theme.scrollBar
+
+                        HoverHandler {
                             cursorShape: Qt.PointingHandCursor
-
-                            onClicked: {
-                                appsList.currentIndex = delegateItem.index
-                                root.launchCurrent()
-                            }
                         }
                     }
 
-                    //List view item's icon
-                    Image {
-                        id: appIcon
-                        anchors.left: parent.left
-                        anchors.leftMargin: Theme.spacing
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: Theme.iconSize
-                        height: Theme.iconSize
-                        sourceSize: Qt.size(Theme.iconSourceSize, Theme.iconSourceSize)
-                        fillMode: Image.PreserveAspectFit
-                        source: "image://icons/" + delegateItem.iconName
+                    //Scrollbar track.
+                    background: Rectangle {
+                        radius: Theme.scrollBarWidth / 2
+                        color: Theme.fieldBackground
                     }
-
-                    //Column layout for the name/comment text
-                    Column {
-                        anchors.left: appIcon.right
-                        anchors.leftMargin: Theme.spacing
-                        anchors.right: parent.right
-                        anchors.rightMargin: Theme.spacing
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        //Name of the application
-                        Text {
-                            id: nameText
-                            width: parent.width
-                            text: delegateItem.name
-                            color: (itemHover.hovered || delegateItem.current) ? Theme.textSelected : Theme.text
-                            font {
-                                family: Theme.fontFamily
-                                pixelSize: Theme.appsNameFontSize
-                            }
-                            elide: Text.ElideRight
-                        }
-
-                        //Comment of the application
-                        Text {
-                            id: commentText
-                            width: parent.width
-                            text: delegateItem.commentText
-                            visible: text.length > 0
-                            color: Theme.textMuted
-                            font {
-                                family: Theme.fontFamily
-                                pixelSize: Theme.appsCommentFontSize
-                            }
-                            elide: Text.ElideRight
-                        }
-                    }
-                }
-            }
-
-            //Empty state behavior text box
-            Text {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                visible: Launcher.resultCount === 0
-                text: "Nothing found"
-                color: Theme.textMuted
-                verticalAlignment: Text.AlignTop
-                topPadding: 5
-                font {
-                    family: Theme.fontFamily
-                    pixelSize: Theme.searchFontSize
-                }
-            }
-
-            //Scrollbar for the List of applications
-            ScrollBar {
-                id: scrollbar
-                anchors.top: appsList.top
-                anchors.bottom: appsList.bottom
-                anchors.right: appsList.right
-                policy: ScrollBar.AsNeeded
-                visible: scrollbar.size < 1.0
-                width: scrollbar.hovered || scrollbar.pressed? Theme.scrollBarWidth : Theme.scrollBarStaticWidth
-                padding: 0
-                minimumSize: 0.08
-
-                //Animation for smooth width change
-                Behavior on width {
-                    NumberAnimation {
-                        duration: 100
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-
-                //Scrollbar thumb
-                contentItem: Rectangle {
-                    radius: Theme.scrollBarWidth / 2
-                    color: Theme.scrollBar
-
-                    HoverHandler {
-                        cursorShape: Qt.PointingHandCursor
-                    }
-                }
-
-                //Scrollbar track
-                background: Rectangle {
-                    radius: Theme.scrollBarWidth / 2
-                    color: Theme.fieldBackground
                 }
             }
         }

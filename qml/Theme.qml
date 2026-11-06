@@ -12,6 +12,9 @@ QtObject {
     readonly property color accent: "#3daee9"
     readonly property color scrollBar: "#40ffffff"
 
+    readonly property int launcherHeight: 510
+    readonly property int launcherWidth: 540
+
     readonly property int radius: 5
     readonly property int spacing: 10
     readonly property int searchFontSize: 14
