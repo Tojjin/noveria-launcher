@@ -55,7 +55,10 @@ Window {
     //Launcher background.
     Rectangle {
         anchors.fill: parent
+        radius: Theme.launcherRadius
         color: Theme.background
+        border.color: Theme.launcherBorder
+        border.width: Theme.launcherBorderWidth
 
         ColumnLayout {
             anchors.fill: parent
