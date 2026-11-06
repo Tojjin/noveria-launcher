@@ -187,6 +187,13 @@ Window {
                 padding: 0
                 minimumSize: 0.08
 
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 100
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+
                 //Scrollbar thumb
                 contentItem: Rectangle {
                     width: parent.width
