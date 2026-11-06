@@ -29,6 +29,8 @@ public:
     void setQuery(const QString& query);
     int resultCount() const;
 
+    Q_INVOKABLE bool launch(int row) const;
+
 signals:
 
     void queryChanged();

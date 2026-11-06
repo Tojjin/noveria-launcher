@@ -1,3 +1,6 @@
+#include <QProcess>
+#include <QRegularExpression>
+
 #include "launcher.h"
 
 #include "core/desktopparser.h"
@@ -35,4 +38,33 @@ void Launcher::setQuery(const QString &query) {
 int Launcher::resultCount() const {
 
     return m_proxy->rowCount();
+}
+
+bool Launcher::launch(int row) const {
+
+    const QModelIndex index = m_proxy->index(row, 0);
+
+    if (!index.isValid()) {
+        return false;
+    }
+
+    QString exec = index.data(ExecRole).value<QString>();
+    static const QRegularExpression placeholderRegex("%[fFuUdDnNickvm]");
+    exec.remove(placeholderRegex);
+    exec = exec.trimmed();
+
+    if (exec.isEmpty()) {
+        return false;
+    }
+
+    QStringList parts = QProcess::splitCommand(exec);
+
+    if (parts.isEmpty()) {
+        return false;
+    }
+
+    QString app = parts.takeFirst();
+    QStringList args = parts;
+
+    return QProcess::startDetached(app, args);
 }

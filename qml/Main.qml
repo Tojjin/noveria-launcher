@@ -5,6 +5,7 @@ import Noveria
 
 //Root window of the launcher
 Window {
+    id: root
     width: 540
     height: 510
     minimumWidth: 540
@@ -16,6 +17,28 @@ Window {
     title: "Noveria Launcher"
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
     color: "transparent"
+
+    function moveSelection(delta) {
+
+        if (appsList.count === 0) {
+            return
+        }
+
+        const next = appsList.currentIndex + delta
+
+        if (next < 0 || next >= appsList.count) {
+            return
+        }
+
+        appsList.currentIndex = next
+        appsList.positionViewAtIndex(next, ListView.Contain)
+    }
+
+    function launchCurrent() {
+        if (Launcher.launch(appsList.currentIndex)) {
+            root.close()
+        }
+    }
 
     //Crutch to make it so the mouse cursor always stays as a pointing finger
     //after grabbing scrollbar thumb even if it move over other elements of the UI
@@ -59,7 +82,29 @@ Window {
                     border.width: 2
                     radius: Theme.radius
                 }
-                onTextChanged: Launcher.query = text
+
+                onTextChanged: {
+                    Launcher.query = text
+                    appsList.currentIndex = 0
+                    appsList.positionViewAtBeginning()
+                }
+
+                onAccepted: root.launchCurrent()
+
+                Keys.onDownPressed: (event) => {
+                    root.moveSelection(1)
+                    event.accepted = true
+                }
+
+                Keys.onUpPressed: (event) => {
+                    root.moveSelection(-1)
+                    event.accepted = true
+                }
+
+                Keys.onEscapePressed: (event) => {
+                    root.close()
+                    event.accepted = true
+                }
             }
 
             //List that shows all desktop applications
@@ -77,6 +122,8 @@ Window {
                 boundsBehavior: Flickable.StopAtBounds
                 acceptedButtons: Qt.NoButton
 
+                currentIndex: 0
+
                 //Custom delegate to properly draw the item with the icon, name and comment/generic name
                 delegate: Item {
                     id: delegateItem
@@ -84,13 +131,16 @@ Window {
                     required property string comment
                     required property string genericName
                     required property string iconName
+                    required property int index
+
+                    readonly property bool current: ListView.isCurrentItem
 
                     readonly property string commentText: {
                         const t_comment = delegateItem.comment.trim();
                         return t_comment !== "" ? t_comment : delegateItem.genericName.trim()
                     }
 
-                    width: scrollbar.visible ? ListView.view.width - Theme.scrollBarWidth - 5 : ListView.view.width
+                    width: scrollbar.visible ? ListView.view.width - Theme.scrollBarWidth - 2 : ListView.view.width
                     height: 50
 
                     HoverHandler {
@@ -101,11 +151,16 @@ Window {
                     Rectangle {
                         anchors.fill: parent
                         radius: Theme.radius
-                        color: itemHover.hovered ? Theme.accent : "transparent"
+                        color: (itemHover.hovered || delegateItem.current) ? Theme.accent : "transparent"
 
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
+
+                            onClicked: {
+                                appsList.currentIndex = delegateItem.index
+                                root.launchCurrent()
+                            }
                         }
                     }
 
@@ -135,7 +190,7 @@ Window {
                             id: nameText
                             width: parent.width
                             text: delegateItem.name
-                            color: itemHover.hovered ? Theme.textSelected : Theme.text
+                            color: (itemHover.hovered || delegateItem.current) ? Theme.textSelected : Theme.text
                             font {
                                 family: Theme.fontFamily
                                 pixelSize: Theme.appsNameFontSize
@@ -187,6 +242,7 @@ Window {
                 padding: 0
                 minimumSize: 0.08
 
+                //Animation for smooth width change
                 Behavior on width {
                     NumberAnimation {
                         duration: 100
@@ -196,7 +252,6 @@ Window {
 
                 //Scrollbar thumb
                 contentItem: Rectangle {
-                    width: parent.width
                     radius: Theme.scrollBarWidth / 2
                     color: Theme.scrollBar
 
@@ -207,8 +262,6 @@ Window {
 
                 //Scrollbar track
                 background: Rectangle {
-                    width: parent.width
-                    height: parent.height
                     radius: Theme.scrollBarWidth / 2
                     color: Theme.fieldBackground
                 }
