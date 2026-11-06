@@ -22,6 +22,7 @@ QtObject {
     readonly property int iconSourceSize: 64
 
     readonly property int scrollBarWidth: 10
+    readonly property int scrollBarStaticWidth: 5
 
     readonly property string fontFamily: "JetBrainsMono Nerd Font Propo"
 }

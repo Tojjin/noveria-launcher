@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Noveria
 
+//Root window of the launcher
 Window {
     width: 540
     height: 510
@@ -16,6 +17,8 @@ Window {
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
     color: "transparent"
 
+    //Crutch to make it so the mouse cursor always stays as a pointing finger
+    //after grabbing scrollbar thumb even if it move over other elements of the UI
     MouseArea {
         id: dragCursorOverlay
         anchors.fill: parent
@@ -26,6 +29,7 @@ Window {
         cursorShape: Qt.PointingHandCursor
     }
 
+    //Launcher background
     Rectangle {
         anchors.fill: parent
         color: Theme.background
@@ -35,6 +39,7 @@ Window {
             anchors.margins: Theme.spacing
             spacing: Theme.spacing
 
+            //Search field
             TextField {
                 id: searchField
                 Layout.fillWidth: true
@@ -57,6 +62,7 @@ Window {
                 onTextChanged: Launcher.query = text
             }
 
+            //List that shows all desktop applications
             ListView {
                 id: appsList
                 Layout.fillWidth: true
@@ -66,35 +72,12 @@ Window {
                 model: Launcher.model
                 visible: Launcher.resultCount > 0
 
+                ScrollBar.vertical: scrollbar
+
                 boundsBehavior: Flickable.StopAtBounds
                 acceptedButtons: Qt.NoButton
 
-                ScrollBar.vertical: ScrollBar {
-                    id: scrollbar
-                    policy: ScrollBar.AsNeeded
-                    visible: scrollbar.size < 1.0
-                    width: Theme.scrollBarWidth
-                    padding: 0
-                    minimumSize: 0.08
-
-                    contentItem: Rectangle {
-                        width: parent.width
-                        radius: Theme.scrollBarWidth / 2
-                        color: Theme.scrollBar
-
-                        HoverHandler {
-                            cursorShape: Qt.PointingHandCursor
-                        }
-                    }
-
-                    background: Rectangle {
-                        width: parent.width
-                        height: parent.height
-                        radius: Theme.scrollBarWidth / 2
-                        color: Theme.fieldBackground
-                    }
-                }
-
+                //Custom delegate to properly draw the item with the icon, name and comment/generic name
                 delegate: Item {
                     id: delegateItem
                     required property string name
@@ -110,6 +93,11 @@ Window {
                     width: scrollbar.visible ? ListView.view.width - Theme.scrollBarWidth - 5 : ListView.view.width
                     height: 50
 
+                    HoverHandler {
+                        id: itemHover
+                    }
+
+                    //List view item background
                     Rectangle {
                         anchors.fill: parent
                         radius: Theme.radius
@@ -121,10 +109,7 @@ Window {
                         }
                     }
 
-                    HoverHandler {
-                        id: itemHover
-                    }
-
+                    //List view item's icon
                     Image {
                         id: appIcon
                         anchors.left: parent.left
@@ -137,6 +122,7 @@ Window {
                         source: "image://icons/" + delegateItem.iconName
                     }
 
+                    //Column layout for the name/comment text
                     Column {
                         anchors.left: appIcon.right
                         anchors.leftMargin: Theme.spacing
@@ -144,6 +130,7 @@ Window {
                         anchors.rightMargin: Theme.spacing
                         anchors.verticalCenter: parent.verticalCenter
 
+                        //Name of the application
                         Text {
                             id: nameText
                             width: parent.width
@@ -156,6 +143,7 @@ Window {
                             elide: Text.ElideRight
                         }
 
+                        //Comment of the application
                         Text {
                             id: commentText
                             width: parent.width
@@ -172,6 +160,7 @@ Window {
                 }
             }
 
+            //Empty state behavior text box
             Text {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -183,6 +172,38 @@ Window {
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.searchFontSize
+                }
+            }
+
+            //Scrollbar for the List of applications
+            ScrollBar {
+                id: scrollbar
+                anchors.top: appsList.top
+                anchors.bottom: appsList.bottom
+                anchors.right: appsList.right
+                policy: ScrollBar.AsNeeded
+                visible: scrollbar.size < 1.0
+                width: scrollbar.hovered || scrollbar.pressed? Theme.scrollBarWidth : Theme.scrollBarStaticWidth
+                padding: 0
+                minimumSize: 0.08
+
+                //Scrollbar thumb
+                contentItem: Rectangle {
+                    width: parent.width
+                    radius: Theme.scrollBarWidth / 2
+                    color: Theme.scrollBar
+
+                    HoverHandler {
+                        cursorShape: Qt.PointingHandCursor
+                    }
+                }
+
+                //Scrollbar track
+                background: Rectangle {
+                    width: parent.width
+                    height: parent.height
+                    radius: Theme.scrollBarWidth / 2
+                    color: Theme.fieldBackground
                 }
             }
         }
