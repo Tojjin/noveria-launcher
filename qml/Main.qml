@@ -7,12 +7,13 @@ import org.kde.layershell 1.0 as LayerShell
 //Root window of the launcher.
 Window {
     id: root
-    width: Theme.launcherWidth
-    height: Theme.launcherHeight
+    width: screen.width
+    height: screen.height
 
+    //LayerShell rules
     LayerShell.Window.scope: "noveria-launcher"
     LayerShell.Window.layer: LayerShell.Window.LayerOverlay
-    LayerShell.Window.anchors: LayerShell.Window.AnchorNone
+    LayerShell.Window.anchors: LayerShell.Window.AnchorTop | LayerShell.Window.AnchorBottom | LayerShell.Window.AnchorLeft | LayerShell.Window.AnchorRight
     LayerShell.Window.exclusionZone: -1
     LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityExclusive
 
@@ -41,6 +42,13 @@ Window {
         }
     }
 
+    //Click-catcher. Closes the launcher on outside clicks.
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.AllButtons
+        onClicked: root.close()
+    }
+
     //Crutch to make it so the mouse cursor always stays as a pointing finger.
     //Even after mouse cursor moves over other elements of the UI.
     MouseArea {
@@ -55,11 +63,18 @@ Window {
 
     //Launcher background.
     Rectangle {
-        anchors.fill: parent
+        width: Theme.launcherWidth
+        height: Theme.launcherHeight
+        anchors.centerIn: parent
         radius: Theme.launcherRadius
         color: Theme.background
         border.color: Theme.launcherBorder
         border.width: Theme.launcherBorderWidth
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+        }
 
         ColumnLayout {
             anchors.fill: parent
