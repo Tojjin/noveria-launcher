@@ -2,20 +2,21 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Noveria
+import org.kde.layershell 1.0 as LayerShell
 
 //Root window of the launcher.
 Window {
     id: root
     width: Theme.launcherWidth
     height: Theme.launcherHeight
-    minimumWidth: Theme.launcherWidth
-    minimumHeight: Theme.launcherHeight
-    maximumWidth: Theme.launcherWidth
-    maximumHeight: Theme.launcherHeight
+
+    LayerShell.Window.scope: "noveria-launcher"
+    LayerShell.Window.layer: LayerShell.Window.LayerOverlay
+    LayerShell.Window.anchors: LayerShell.Window.AnchorNone
+    LayerShell.Window.exclusionZone: -1
+    LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityExclusive
 
     visible: true
-    title: "Noveria Launcher"
-    flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
     color: "transparent"
 
     function moveSelection(delta) {
@@ -82,7 +83,7 @@ Window {
                 background: Rectangle {
                     color: Theme.fieldBackground
                     border.color: Theme.fieldBorder
-                    border.width: 2
+                    border.width: Theme.textFieldBorderWidth
                     radius: Theme.radius
                 }
 
