@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickControls2)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickControls2 Network)
 
 qt_standard_project_setup()
 
@@ -49,8 +49,6 @@ qt_add_executable(noveria-launcher-qml
 
 target_include_directories(noveria-launcher-qml PRIVATE src/app)
 
-target_link_libraries(noveria-launcher-qml PRIVATE noveria-core)
-
 set_source_files_properties(qml/Main.qml PROPERTIES QT_RESOURCE_ALIAS Main.qml)
 set_source_files_properties(qml/Theme.qml PROPERTIES QT_RESOURCE_ALIAS Theme.qml QT_QML_SINGLETON_TYPE TRUE)
 
@@ -67,7 +65,7 @@ qt_add_qml_module(noveria-launcher-qml
     src/app/iconprovider.cpp
 )
 
-target_link_libraries(noveria-launcher-qml PRIVATE Qt6::Quick Qt6::QuickControls2)
+target_link_libraries(noveria-launcher-qml PRIVATE noveria-core Qt6::Quick Qt6::QuickControls2 Qt6::Network)
 
 set_target_properties(noveria-launcher PROPERTIES
     WIN32_EXECUTABLE OFF

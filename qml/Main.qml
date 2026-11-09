@@ -16,8 +16,9 @@ Window {
     LayerShell.Window.anchors: LayerShell.Window.AnchorTop | LayerShell.Window.AnchorBottom | LayerShell.Window.AnchorLeft | LayerShell.Window.AnchorRight
     LayerShell.Window.exclusionZone: -1
     LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityExclusive
+    LayerShell.Window.activateOnShow: true
 
-    visible: true
+    visible: false
     color: "transparent"
 
     function moveSelection(delta) {
@@ -38,7 +39,32 @@ Window {
 
     function launchCurrent() {
         if (Launcher.launch(appsList.currentIndex)) {
-            root.close()
+            root.hideLauncher()
+        }
+    }
+
+    function showLauncher() {
+        if (!root.visible) {
+            root.show()
+        }
+
+        root.requestActivate()
+        searchField.text = ""
+        appsList.currentIndex = 0
+        appsList.positionViewAtBeginning()
+        searchField.forceActiveFocus()
+    }
+
+    function hideLauncher() {
+        root.hide()
+    }
+
+    function toggleLauncher() {
+        if (root.visible) {
+            hideLauncher()
+        }
+        else {
+            showLauncher()
         }
     }
 
@@ -46,7 +72,7 @@ Window {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
-        onClicked: root.close()
+        onClicked: root.hideLauncher()
     }
 
     //Crutch to make it so the mouse cursor always stays as a pointing finger.
@@ -121,7 +147,7 @@ Window {
                 }
 
                 Keys.onEscapePressed: (event) => {
-                    root.close()
+                    root.hideLauncher()
                     event.accepted = true
                 }
             }
