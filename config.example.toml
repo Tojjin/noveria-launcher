@@ -1,0 +1,39 @@
+# Noveria Launcher theme.
+# Copy to ~/.config/noveria-launcher/config.toml
+
+[launcher]
+width = 540
+height = 510
+radius = 10
+border_width = 1
+
+[colors]
+# #RRGGBB or #AARRGGBB (alpha first)
+background = "#802a2a2a"
+border = "#70ffffff"
+field_background = "#14ffffff"
+field_border = "#ffffff"
+text = "#ffffff"
+text_muted = "#656565"
+text_selected = "#000000"
+accent = "#3daee9"
+scrollbar = "#40ffffff"
+
+[fonts]
+family = "JetBrainsMono Nerd Font Propo"
+search_size = 14
+app_name_size = 13
+app_comment_size = 12
+
+[layout]
+spacing = 10
+radius = 5
+search_field_height = 40
+search_field_padding = 10
+list_spacing = 5
+item_height = 50
+text_field_border_width = 2
+scrollbar_width = 10
+scrollbar_static_width = 5
+icon_size = 40
+icon_source_size = 64

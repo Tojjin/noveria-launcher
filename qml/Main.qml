@@ -111,10 +111,10 @@ Window {
             TextField {
                 id: searchField
                 Layout.fillWidth: true
-                Layout.preferredHeight: 40
+                Layout.preferredHeight: Theme.searchFieldHeight
                 placeholderText: "Search applications..."
                 focus: true
-                padding: 10
+                padding: Theme.searchFieldPadding
                 color: Theme.text
                 placeholderTextColor: Theme.textMuted
                 font {
@@ -165,7 +165,7 @@ Window {
                     id: appsList
                     anchors.fill: parent
                     clip: true
-                    spacing: 5
+                    spacing: Theme.listSpacing
                     model: Launcher.model
                     visible: Launcher.resultCount > 0
 
@@ -193,7 +193,7 @@ Window {
                         }
 
                         width: scrollbar.visible ? ListView.view.width - Theme.scrollBarWidth - 2 : ListView.view.width
-                        height: 50
+                        height: Theme.itemHeight
 
                         HoverHandler {
                             id: itemHover
