@@ -176,6 +176,34 @@ Window {
 
                     currentIndex: 0
 
+                    WheelHandler {
+                        id: wheelHandler
+                        blocking: true
+                        orientation: Qt.Vertical
+                        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+
+                        onWheel: (event) => {
+                            const step = Theme.itemHeight + Theme.listSpacing
+                            const angle = event.angleDelta.y
+
+                            let delta = 0
+
+                            if (angle !== 0) {
+                                delta = (angle / 120) * step
+                            }
+
+                            if (delta === 0) {
+                                return
+                            }
+
+                            const maxY = Math.max(0, appsList.contentHeight - appsList.height)
+
+                            appsList.cancelFlick()
+                            appsList.contentY = Math.max(0, Math.min(maxY, appsList.contentY - delta))
+                            event.accepted = true
+                        }
+                    }
+
                     //Custom delegate to properly draw the Item with the Icon, Name and Comment/Generic name.
                     delegate: Item {
                         id: delegateItem
