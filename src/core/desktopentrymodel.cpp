@@ -1,5 +1,4 @@
 #include "desktopentrymodel.h"
-#include <QIcon>
 
 DesktopEntryModel::DesktopEntryModel(QObject *parent) : QAbstractListModel(parent){}
 
@@ -32,8 +31,6 @@ QVariant DesktopEntryModel::data(const QModelIndex &index, int role) const {
         return entry.comment;
     case ExecRole:
         return entry.exec;
-    case IconRole:
-        return loadIcon(entry.icon);
     case CategoriesRole:
         return entry.categories.join(" ");
     case KeywordsRole:
@@ -52,33 +49,6 @@ const DesktopEntry* DesktopEntryModel::at(const QModelIndex &index) const {
     }
 
     return nullptr;
-}
-
-QIcon DesktopEntryModel::loadIcon(const QString &iconName) const {
-
-    if (iconName.isEmpty()) {
-        return QIcon::fromTheme("application-x-executable");
-    }
-
-    if (m_iconCache.contains(iconName)) {
-        return m_iconCache.value(iconName);
-    }
-
-    QIcon icon;
-    if (iconName.startsWith('/')) {
-        icon = QIcon(iconName);
-    }
-    else {
-        icon = QIcon::fromTheme(iconName);
-    }
-
-    if (icon.isNull()) {
-        icon = QIcon::fromTheme("application-x-executable");
-    }
-
-    m_iconCache.insert(iconName, icon);
-
-    return icon;
 }
 
 QHash<int, QByteArray> DesktopEntryModel::roleNames() const {

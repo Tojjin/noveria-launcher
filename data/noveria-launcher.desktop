@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Noveria Launcher
+GenericName=Application Launcher
+Comment=Fast application launcher for Hyprland
+Exec=noveria-launcher
+TryExec=noveria-launcher
+Icon=noveria-launcher
+Terminal=false
+Categories=Utility;
+Keywords=launcher;application;search;run;
+StartupNotify=false
+NoDisplay=true

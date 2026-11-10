@@ -8,14 +8,12 @@
 #include <QVariant>
 #include <QList>
 #include <QHash>
-#include <QIcon>
 
 enum Roles {
     NameRole = Qt::UserRole + 1,
     GenericNameRole,
     CommentRole,
     ExecRole,
-    IconRole,
     CategoriesRole,
     KeywordsRole,
     IconNameRole,
@@ -37,9 +35,6 @@ public:
 private:
 
     QList<DesktopEntry> m_entries;
-    mutable QHash<QString, QIcon> m_iconCache;
-
-    QIcon loadIcon(const QString& iconName) const;
 
 protected:
 
